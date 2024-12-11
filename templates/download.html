@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Download Your Beautifully Generated Handwritten Assignment.">
+    <meta name="keywords" content="Handwritten Assignment, PDF Download, Assignment Generator, Compressed PDF">
+    <meta name="author" content="Bharat Mangal">
+    <title>Download Your Assignment</title>
+    <link rel="stylesheet" href="../static/css/styles.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #4CAF50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin: 10px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .sparkles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #FFD700;
+            border-radius: 50%;
+            animation: sparkle-animation 2s ease-in-out infinite;
+        }
+
+        @keyframes sparkle-animation {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(-200px) scale(0.5);
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-300px) scale(0);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Your Assignment is Ready!</h1>
+    <p>Click below to download your files:</p>
+    <a href="../static/generated_assignment.pdf" download>
+        <button>Download Generated PDF</button>
+    </a>
+    
+    <a href="..//static/handwritten_assignment.pdf" download>
+        <button>Download Handwritten PDF</button>
+    </a>
+    <a href="../static/compressed_assignment.pdf" download>
+        <button>Download Compressed Handwritten PDF</button>
+    </a>
+
+    <div class="sparkles-container" id="sparklesContainer"></div>
+
+    <script>
+        function createSparkle() {
+            const sparklesContainer = document.getElementById('sparklesContainer');
+            const sparkle = document.createElement('div');
+            sparkle.classList.add('sparkle');
+            sparkle.style.left = `${Math.random() * 100}vw`;
+            sparkle.style.top = `${Math.random() * 100}vh`;
+            sparkle.style.animationDuration = `${Math.random() * 1.5 + 1}s`;
+            sparklesContainer.appendChild(sparkle);
+
+            setTimeout(() => {
+                sparklesContainer.removeChild(sparkle);
+            }, 2000);
+        }
+
+        function startSparkles() {
+            setInterval(createSparkle, 200);
+        }
+
+        // Start the sparkles animation when the page loads
+        window.onload = startSparkles;
+    </script>
+</body>
+</html>
