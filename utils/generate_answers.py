@@ -1,7 +1,7 @@
 from openai import OpenAI
 import os
 
-ai_token = os.getenv('OPENAI_API')
+ai_token = os.environ.get('OPENAI_API_KEY')
 client = OpenAI(api_key = ai_token)
 def generate_answers(questions):
     # Use the ChatCompletion endpoint for GPT models
