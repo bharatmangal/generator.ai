@@ -1,20 +1,23 @@
 import os
 from fpdf import FPDF
+import time
 
 def generate_qa_pdf(content):
-    # Ensure the static directory exists
-    os.makedirs("./static", exist_ok=True)
+    # Ensure the static directory exists (if needed for other uses)
+    static_path = "./static"
+    if not os.path.exists(static_path):
+        os.makedirs(static_path)
 
+    # Create a temporary file in /tmp
+    output_file = f"/tmp/generated_assignment_{time.time()}.pdf"
+
+    # Create PDF instance
     pdf = FPDF()
     pdf.add_page()
 
-    # Add DejaVuSans font for Unicode support
-    font_path_regular = os.path.join(os.getcwd(), "static/DejaVuSans.ttf")
-    font_path_bold = os.path.join(os.getcwd(), "static/DejaVuSans-Bold.ttf")
-
-    pdf.add_font("DejaVu", "", font_path_regular, uni=True)
-    pdf.add_font("DejaVu-Bold", "", font_path_bold, uni=True)
-
+    # Add fonts to PDF
+    pdf.add_font("DejaVu", "", "static/DejaVuSans.ttf", uni=True)
+    pdf.add_font("DejaVu-Bold", "", "static/DejaVuSans-Bold.ttf", uni=True)
 
     # Set font and add content
     pdf.set_font("DejaVu", size=12)
@@ -25,7 +28,10 @@ def generate_qa_pdf(content):
     pdf.set_font("DejaVu", size=12)
     pdf.multi_cell(0, 10, txt=content.strip())
 
-    # Save PDF
-    output_file = "./static/generated_assignment.pdf"
-    pdf.output(output_file)
+    # Save PDF in temporary file location
+    try:
+        pdf.output(output_file)
+    except IOError as e:
+        raise IOError(f"Failed to write PDF: {str(e)}")
+
     return output_file
