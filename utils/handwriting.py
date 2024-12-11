@@ -12,7 +12,7 @@ def convert_to_handwriting(text):
     LINE_SPACING = 80  # Adjust to match the register lines
 
     # Load the handwriting font
-    font = ImageFont.truetype("QEAntonyLark.ttf", FONT_SIZE)
+    font = ImageFont.truetype("./QEAntonyLark.ttf", FONT_SIZE)
 
     # Prepare for multi-page
     pages = []
