@@ -38,11 +38,19 @@ def compress_pdf(input_pdf):
         print("Error: Compressed file starting with 'assignment' not found!")
         return
     
-    # Define the new name for the compressed file
-    new_compressed_file_path = os.path.join(output_folder, 'compressed_assignment.pdf')
+    # Generate a unique filename for the new file
+    timestamp = time.strftime("%m-%d-%Y-%H-%M-%S")
+    new_compressed_file_name = f"compressed_assignment.pdf"  # Overwrite the existing file
+    new_compressed_file_path = os.path.join(output_folder, new_compressed_file_name)
 
-    # Rename the file to compressed_assignment.pdf
-    os.rename(compressed_file_path, new_compressed_file_path)
+    # Check if the file already exists and replace it if so
+    if os.path.exists(new_compressed_file_path):
+        os.remove(new_compressed_file_path)  # Remove the existing file to replace it
+        os.rename(compressed_file_path, new_compressed_file_path)
+    else:
+        os.rename(compressed_file_path, new_compressed_file_path)
 
     # Clean up by deleting the current task
     t.delete_current_task()
+
+    return new_compressed_file_path
