@@ -9,8 +9,12 @@ def generate_qa_pdf(content):
     pdf.add_page()
 
     # Add DejaVuSans font for Unicode support
-    pdf.add_font("DejaVu", "", "DejaVuSans.ttf", uni=True)
-    pdf.add_font("DejaVu-Bold", "", "DejaVuSans-Bold.ttf", uni=True)
+    font_path_regular = os.path.join(os.getcwd(), "static/DejaVuSans.ttf")
+    font_path_bold = os.path.join(os.getcwd(), "static/DejaVuSans-Bold.ttf")
+
+    pdf.add_font("DejaVu", "", font_path_regular, uni=True)
+    pdf.add_font("DejaVu-Bold", "", font_path_bold, uni=True)
+
 
     # Set font and add content
     pdf.set_font("DejaVu", size=12)
