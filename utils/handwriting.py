@@ -1,9 +1,12 @@
 from PIL import Image, ImageDraw, ImageFont
 import os
+import time
 
 def convert_to_handwriting(text):
-
-    os.makedirs("./static", exist_ok=True)
+    # Ensure the static directory exists (if needed for other uses)
+    static_path = "./static"
+    if not os.path.exists(static_path):
+        os.makedirs(static_path)
 
     # A4 dimensions in pixels at 300 DPI
     A4_WIDTH, A4_HEIGHT = 2480, 3508
@@ -12,7 +15,8 @@ def convert_to_handwriting(text):
     LINE_SPACING = 80  # Adjust to match the register lines
 
     # Load the handwriting font
-    font = ImageFont.truetype("QEAntonyLark.ttf", FONT_SIZE)
+    font_path = "QEAntonyLark.ttf"
+    font = ImageFont.truetype(font_path, FONT_SIZE)
 
     # Prepare for multi-page
     pages = []
@@ -81,7 +85,7 @@ def convert_to_handwriting(text):
     # Add the last page
     pages.append(current_image)
 
-    # Save as PDF
-    output = "./static/handwritten_assignment.pdf"
-    pages[0].save(output, save_all=True, append_images=pages[1:])
-    return output
+    # Save as PDF in a temporary location
+    output_file = f"/tmp/handwritten_assignment_{time.time()}.pdf"
+    pages[0].save(output_file, save_all=True, append_images=pages[1:])
+    return output_file
