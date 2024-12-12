@@ -6,11 +6,6 @@ import time
 c_token = os.getenv('COMPRESS_API')
 
 def compress_pdf(input_pdf):
-    # Ensure the static directory exists
-    static_path = "./static"
-    if not os.path.exists(static_path):
-        os.makedirs(static_path)
-
     # Initialize the Compress object with your API token
     t = Compress(c_token, proxies={}, verify_ssl=True)
     
@@ -41,15 +36,5 @@ def compress_pdf(input_pdf):
     if not compressed_file_path:
         raise FileNotFoundError("Error: Compressed file starting with 'assignment' not found!")
 
-    # Create a unique filename for the compressed file
-    timestamp = time.strftime("%m-%d-%Y-%H-%M-%S")
-    new_compressed_file_name = f"compressed_assignment_{timestamp}.pdf"
-    new_compressed_file_path = os.path.join(static_path, new_compressed_file_name)
-
-    # Move the file from /tmp to the static folder
-    shutil.move(compressed_file_path, new_compressed_file_path)
-
-    # Clean up the task on the LovePDF API
-    t.delete_current_task()
-
-    return new_compressed_file_path
+    # Return the path to the compressed file directly
+    return compressed_file_path
