@@ -27,7 +27,7 @@ def compress_pdf(input_pdf):
         return
 
     # GitHub repository details
-    repo_url = 'https://api.github.com/repos/bharatmangal/generator.ai/contents/static/'
+        repo_url = 'https://api.github.com/repos/bharatmangal/generator.ai/contents/static/'
     token = os.getenv("GITHUB_TOKEN")
     if not token:
         print("Error: GITHUB_TOKEN not set in environment variables.")
