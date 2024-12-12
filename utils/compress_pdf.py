@@ -12,7 +12,7 @@ def compress_pdf(input_pdf):
     t.add_file(input_pdf)
     
     # Set the output folder in your GitHub repository
-    repo_url = 'https://api.github.com/repos/bharatmangal/generator.ai/contents/PATH'
+    repo_url = 'https://api.github.com/repos/bharatmangal/generator.ai/contents/static/compressed_assignment.pdf'
     token = os.getenv("GITHUB_TOKEN")
     headers = {
         'Authorization': f'token {token}',
