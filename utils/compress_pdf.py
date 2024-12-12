@@ -5,8 +5,9 @@ from pylovepdf.tools.compress import Compress
 import requests
 
 def compress_pdf(input_pdf):
+    compress_key = os.getenv("COMPRESS_API")
     # Initialize the Compress object with your public key and proxies (empty if not using a proxy)
-    t = Compress('project_public_d3eacfc89109a24a513fbb30772f1002_-jfiP41f31189c3bb504f39fbf8819b50b4e6', proxies={}, verify_ssl=True)
+    t = Compress(compress_key, proxies={}, verify_ssl=True)
     
     # Add the file to be compressed
     t.add_file(input_pdf)
