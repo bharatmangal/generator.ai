@@ -88,14 +88,14 @@
 <body>
     <h1>Your Assignment is Ready!</h1>
     <p>Click below to download your files:</p>
-    <a href="../static/generated_assignment.pdf" download>
+    <a href="{{ qa_pdf_path }}" download>
         <button>Download Generated PDF</button>
     </a>
     
-    <a href="..//static/handwritten_assignment.pdf" download>
+    <a href="{{ handwriting_pdf_path }}" download>
         <button>Download Handwritten PDF</button>
     </a>
-    <a href="../static/compressed_assignment.pdf" download>
+    <a href="{{ compressed_pdf_path }}" download>
         <button>Download Compressed Handwritten PDF</button>
     </a>
 
