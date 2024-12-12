@@ -1,58 +1,68 @@
 import os
 import time
-import uuid
+import base64
 from pylovepdf.tools.compress import Compress
 import requests
 
 def compress_pdf(input_pdf):
+    # Fetch the compression key from environment variables
     compress_key = os.getenv("COMPRESS_API")
-    # Initialize the Compress object with your public key and proxies (empty if not using a proxy)
+    if not compress_key:
+        print("Error: COMPRESS_KEY not set in environment variables.")
+        return
+
+    # Initialize the Compress object
     t = Compress(compress_key, proxies={}, verify_ssl=True)
-    
-    # Add the file to be compressed
     t.add_file(input_pdf)
+    t.execute()
     
-    # Set the output folder in your GitHub repository
-    repo_url = 'https://api.github.com/repos/bharatmangal/generator.ai/contents/static/compressed_assignment.pdf'
+    # Wait for compression to finish
+    time.sleep(2)
+
+    # Fetch the compressed file from the output
+    output_folder = t.get_output_files()
+    compressed_file_path = output_folder[0] if output_folder else None
+    if not compressed_file_path:
+        print("Error: No compressed file found!")
+        return
+
+    # GitHub repository details
+    repo_url = 'https://api.github.com/repos/bharatmangal/generator.ai/contents/static/'
     token = os.getenv("GITHUB_TOKEN")
+    if not token:
+        print("Error: GITHUB_TOKEN not set in environment variables.")
+        return
+
     headers = {
         'Authorization': f'token {token}',
         'Content-Type': 'application/json'
     }
 
-    # Execute the compression
-    t.execute()
-    
-    # Optionally, wait for the compression to finish (you might need to check for the file's presence)
-    time.sleep(2)  # This is to make sure the download has finished (adjust if necessary)
+    # Prepare the file for upload
+    with open(compressed_file_path, 'rb') as f:
+        file_content = f.read()
+    encoded_content = base64.b64encode(file_content).decode('utf-8')
 
-    # Get the list of files in the output folder (repo directory)
-    response = requests.get(repo_url, headers=headers)
-    files_in_folder = response.json()
-
-    # Find the compressed file in the repo
-    compressed_file_path = None
-    for file_info in files_in_folder:
-        if file_info['name'].startswith('assignment') and file_info['name'].endswith('.pdf'):
-            compressed_file_path = file_info['download_url']  # Get the URL to download the file
-            break  # Stop after finding the first matching file
-    
-    if not compressed_file_path:
-        print("Error: Compressed file starting with 'assignment' not found!")
-        return
-    
-    # Generate a unique filename for the new file
+    # Generate a unique filename
     timestamp = time.strftime("%m-%d-%Y-%H-%M-%S")
-    new_compressed_file_name = f"compressed_assignment_{timestamp}.pdf"  # Overwrite the existing file
-    new_compressed_file_path = os.path.join('https://github.com/USERNAME/REPOSITORY/contents/PATH', new_compressed_file_name)
+    new_file_name = f"compressed_assignment_{timestamp}.pdf"
 
-    # Rename the file
-    response = requests.put(repo_url + f'/{compressed_file_path.split("/")[-1]}', json={'path': new_compressed_file_name}, headers=headers)
-    if response.status_code != 200:
-        print("Error: Could not rename file.")
-        return
+    # Upload the file to GitHub
+    payload = {
+        'message': f'Upload compressed file {new_file_name}',
+        'content': encoded_content,
+    }
 
-    # Clean up by deleting the current task
-    t.delete_current_task()
+    upload_url = f"{repo_url}{new_file_name}"
+    response = requests.put(upload_url, json=payload, headers=headers)
 
-    return new_compressed_file_path
+    if response.status_code == 201:
+        print(f"File uploaded successfully: {new_file_name}")
+        return response.json().get('content', {}).get('download_url')
+    elif response.status_code == 422:
+        print("Error: File already exists.")
+    else:
+        print(f"Error: Failed to upload file. Status Code: {response.status_code}")
+        print(response.json())
+
+    return None
